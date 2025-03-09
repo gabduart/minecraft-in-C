@@ -1,2 +1,2 @@
-# minecraft-in-C
-Why not minecraft in C?
+# minecraft in C++
+Minecraft in C++, why not?
