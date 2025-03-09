@@ -1,21 +1,54 @@
 #include "Window.h"
+#include "Renderer.h"
 #include <iostream>
+
+Renderer* renderer = nullptr;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg) {
+        // ======= CREATION =======
+        case WM_CREATE:
+            renderer = new Renderer(hwnd); // initializes the renderer with the window
+            break;
+
+        // ======= CLOSE =======
         case WM_CLOSE:
             DestroyWindow(hwnd);
             break;
         case WM_DESTROY:
+            if (renderer)
+            {
+                delete renderer;
+                renderer = nullptr;
+            }
             PostQuitMessage(0);
             return 0;
+
+        // ======= PAINT =======
+        case WM_PAINT:
+            if (renderer)
+            {
+                renderer->DrawRectangle(hwnd); // calling the function to draw the rectangle
+            }
+            break;
+
+        // ======= MOUSE =======
+        case WM_LBUTTONDOWN:
+            std::cout << "Left click detected!\n";
+            break;
+
+        case WM_RBUTTONDOWN:
+            std::cout << "Right click detected!\n";
+            break;
+
+        // ======= KEYS =======
         case WM_KEYDOWN:
             if (wParam == VK_ESCAPE) 
             {
-                DestroyWindow(hwnd);
+                DestroyWindow(hwnd); // Close the window with the ESC key
             }
-            break;
+            break;            
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
